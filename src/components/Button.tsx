@@ -1,12 +1,12 @@
 type ButtonProps = {
   onClick?: () => void;
   bgColor?: string;
-  color?: string;
+  color?: keyof typeof colorStyles; // color is now strictly typed to available colors
   children: React.ReactNode;
   pill?: boolean;
   fontSize?: number;
   outline?: boolean;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: keyof typeof sizeStyles; // size is now strictly typed to available sizes
   disabled?: boolean;
 };
 
@@ -41,7 +41,7 @@ const colorStyles = {
   },
   warning: {
     backgroundColor: "#facc15",
-    color: "white",
+    color: "#111827",
   },
   purple: {
     backgroundColor: "#7e22ce",
@@ -72,14 +72,20 @@ const sizeStyles = {
   },
 };
 
-export default function Button(props: ButtonProps) {
-  const { color = "default", pill, outline, size = "md", onClick, children, disabled } = props;
-  const styles = colorStyles[color] || colorStyles.default;
-  const sizeStyle = sizeStyles[size];
+export default function Button({
+  color = "default",
+  pill = false,
+  outline = false,
+  size = "md",
+  onClick,
+  children,
+  disabled = false,
+}: ButtonProps) {
+  const styles = colorStyles[color]; // We know color exists in colorStyles now
+  const sizeStyle = sizeStyles[size]; // Same for size
 
   return (
     <button
-    
       onClick={onClick}
       style={{
         backgroundColor: outline ? "transparent" : styles.backgroundColor,
